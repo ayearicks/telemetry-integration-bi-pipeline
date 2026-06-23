@@ -92,27 +92,27 @@
 <!-- ROUTING ZONE B: DEDUPLICATION CASCADE ARCHITECTURE -->
 {% if nfl_html_recommended_one != blank %}
     {% assign single_one = nfl_html_recommended_one %}
-{% SIGNED_ELSIF nba_html_recommended_one != blank %}
+{% elsif nba_html_recommended_one != blank %}
     {% assign single_one = nba_html_recommended_one %}
-{% SIGNED_ELSIF mlb_html_recommended_one != blank %}
+{% elsif mlb_html_recommended_one != blank %}
     {% assign single_one = mlb_html_recommended_one %}
-{% SIGNED_ELSIF ncaab_html_recommended_one != blank %}
+{% elsif ncaab_html_recommended_one != blank %}
     {% assign single_one = ncaab_html_recommended_one %}
 {% endif %}
 
 {% if nba_html_recommended_one != blank and nba_html_recommended_one != single_one %}
     {% assign single_two = nba_html_recommended_one %}
-{% SIGNED_ELSIF mlb_html_recommended_one != blank and mlb_html_recommended_one != single_one %}
+{% elsif mlb_html_recommended_one != blank and mlb_html_recommended_one != single_one %}
     {% assign single_two = mlb_html_recommended_one %}
-{% SIGNED_ELSIF ncaab_html_recommended_one != blank and ncaab_html_recommended_one != single_one %}
+{% elsif ncaab_html_recommended_one != blank and ncaab_html_recommended_one != single_one %}
     {% assign single_two = ncaab_html_recommended_one %}
-{% SIGNED_ELSIF nba_html_recommended_two != blank %}
+{% elsif nba_html_recommended_two != blank %}
     {% assign single_two = nba_html_recommended_two %}
-{% SIGNED_ELSIF ncaab_html_recommended_two != blank %}
+{% elsif ncaab_html_recommended_two != blank %}
     {% assign single_two = ncaab_html_recommended_two %}
-{% SIGNED_ELSIF mlb_html_recommended_two != blank %}
+{% elsif mlb_html_recommended_two != blank %}
     {% assign single_two = mlb_html_recommended_two %}
-{% SIGNED_ELSIF nfl_html_recommended_two != blank %}
+{% elsif nfl_html_recommended_two != blank %}
     {% assign single_two = nfl_html_recommended_two %}
 {% endif %}
 
