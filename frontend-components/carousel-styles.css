@@ -1,0 +1,403 @@
+/**
+ * ====================================================================
+ * SPORTSBOOK INTELLIGENT COMPONENT LAYOUT ARCHITECTURE
+ * Scope: Responsive UI Layout, Animations, and Spatial Render Classes
+ * Integration: Interoperable with Google Tag Manager Injection Frameworks
+ * ====================================================================
+ */
+
+@viewport {
+    width: device-width;
+    zoom: 0.5;
+}
+
+/* 1. VIEWPORT OVERLAY ANIMATION CONTROLS */
+@keyframes showOverlay {
+    0% { opacity: 0; }
+    95% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@-webkit-keyframes showOverlay {
+    0% { opacity: 0; }
+    95% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes hide {
+    0% { opacity: 1; position: relative; }
+    99% { opacity: 1; position: relative; }
+    100% { opacity: 0; position: absolute; }
+}
+
+@-webkit-keyframes hide {
+    0% { opacity: 1; position: relative; }
+    99% { opacity: 1; position: relative; }
+    100% { opacity: 0; position: absolute; }
+}
+
+@keyframes zIndex {
+    0% { z-index: -99999; }
+    95% { z-index: -99999; }
+    100% { z-index: 999999; }
+}
+
+@-webkit-keyframes zIndex {
+    0% { z-index: -99999; }
+    95% { z-index: -99999; }
+    100% { z-index: 999999; }
+}
+
+/* 2. BASE CONTAINER VISIBILITY MATRIX */
+.telemetry-modal {
+    display: flex;
+}
+
+.telemetry-hidden {
+    display: none !important;
+}
+
+.telemetry-show {
+    display: flex;
+}
+
+.telemetry-close {
+    display: none;
+}
+
+/* 3. HIGH-DENSITY HORIZONTAL SLIDER DESIGN */
+.telemetry-carousel {
+    display: none;
+    height: 200px;
+    overflow-y: hidden;
+    margin-bottom: 1vh !important;
+    overflow-x: auto;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+/* Custom Scrollbar Elements Configuration */
+.telemetry-carousel::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+}
+
+.telemetry-carousel::-webkit-scrollbar-thumb {
+    background: rgb(237, 179, 39);
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+}
+
+.telemetry-carousel::-webkit-scrollbar-track {
+    background: rgba(64, 64, 64, 0.5);
+    box-shadow: inset 0 0 6px #404040;
+    border-radius: 10px;
+}
+
+.telemetry-carousel::-webkit-scrollbar-track-piece:end {
+    margin-right: 400px;
+}
+
+.telemetry-carousel::-webkit-scrollbar-track-piece:start {
+    margin-left: 400px;
+}
+
+.telemetry-carousel-game-container {
+    display: inline-flex;
+    gap: 1vh;
+    flex-wrap: nowrap;
+    padding: 5px 0 !important;
+    height: 200px !important;
+}
+
+/* 4. COMPONENT CARD FOOTPRINT MODULATORS */
+.telemetry-carousel-img-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 200px !important;
+    max-width: 380px !important;
+    width: 320px;
+    min-width: 320px !important;
+    transition: background-color 0.3s;
+    color: #ffffff !important;
+    padding: 5px !important;
+    overflow: hidden;
+    position: relative;
+    transform: translateZ(0); /* Triggers GPU Hardware Acceleration */
+    background-color: transparent;
+    background-size: cover;
+}
+
+.telemetry-carousel-img-wrapper.telemetry-no-video {
+    background-size: cover !important;
+    background-position: center !important;
+    flex-direction: column !important;
+}
+
+/* Semi-transparent protective UI layer between content and background images */
+.telemetry-carousel-img-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(4, 72, 33, 0.6);
+    z-index: 1;
+}
+
+.telemetry-carousel-img-wrapper > * {
+    z-index: 999 !important;
+}
+
+.telemetry-carousel-img-wrapper:hover {
+    background-color: #18bc5d !important;
+}
+
+/* 5. USER ENGAGEMENT ACTION LINKS (CTAs) */
+.telemetry-cta-action, .telemetry-cta-action-dark {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between;
+    align-items: center;
+    width: 100% !important;
+    height: 200px !important;
+    text-decoration: none !important;
+}
+
+.telemetry-carousel-img-wrapper:hover, 
+.telemetry-cta-action:hover, 
+.telemetry-cta-action-dark:hover {
+    text-decoration: none !important;
+}
+
+/* 6. TELEMETRY BADGING AND METADATA ELEMENTS */
+.telemetry-bet-banner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100% !important;
+    padding: 10px 5px 8px 12px !important;
+}
+
+.telemetry-bet-banner-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 70% !important;
+    padding-right: 4px !important;
+    flex-wrap: nowrap;
+    gap: 4px;
+}
+
+.telemetry-banner-special {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    font-size: 10px;
+    font-weight: 700;
+    color: #000000 !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.telemetry-banner-special-group {
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: #ffcd00 !important;
+    justify-content: space-between;
+    align-items: baseline;
+    border-radius: 2px;
+    padding: 1px !important;
+}
+
+.telemetry-banner-tag {
+    fill: #000000 !important;
+    height: 13px !important;
+    width: 13px !important;
+}
+
+.telemetry-banner-topic {
+    color: #ffffff !important;
+    background-color: #979797 !important;
+    height: 17px !important;
+    mask-size: 17px;
+    mask-position: center center;
+    min-width: 17px !important;
+    width: 17px !important;
+    display: block !important;
+}
+
+.telemetry-special-text {
+    margin: 0 !important;
+}
+
+.telemetry-bet-time {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    color: #76AE8D !important;
+}
+
+/* 7. DYNAMIC LIVE ODDS COMPONENT DESIGNS */
+.telemetry-bet-game-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between !important;
+    align-items: center;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 5px 5px 0 10px !important;
+    height: 170px !important;
+}
+
+.telemetry-carousel-img-wrapper.telemetry-no-video .telemetry-bet-container {
+    width: 100% !important;
+}
+
+.telemetry-bet-league {
+    display: flex !important;
+    font-size: 16px !important;
+    color: #a4edc4 !important;
+    width: 100% !important;
+    font-weight: bold;
+}
+
+#telemetry-heading {
+    font-size: 13px;
+    font-weight: 500;
+    min-height: 48px !important;
+    display: none;
+    padding: 0 0 0 18px !important;
+    width: 100%;
+    color: #f9c523 !important;
+    align-items: center;
+    background-color: #404040 !important;
+    flex-wrap: wrap;
+}
+
+/* 8. MULTI-LEG PARLAY SPATIAL COUPLERS */
+.telemetry-parlay {
+    width: fit-content !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    padding-left: 9px !important;
+}
+
+.telemetry-parlay-line {
+    display: flex !important;
+    align-items: flex-start !important;
+    position: relative !important;
+    flex-wrap: nowrap !important;
+}
+
+.telemetry-parlay-group {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start;
+    gap: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.telemetry-circle {
+    position: relative !important;
+    width: 10px !important;
+    height: 10px !important;
+    background-color: #ec9a0b !important;
+    display: inline-block !important;
+    margin: 5px !important;
+    border-radius: 50% !important;
+}
+
+.telemetry-line {
+    position: absolute !important;
+    left: 10px !important;
+    transform: translateX(-50%) !important;
+    width: 3px !important;
+    background-color: #ec9a0b !important;
+    visibility: visible !important;
+    height: 67.5% !important;
+    top: 11px !important;
+}
+
+.telemetry-market-line {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    flex: 0 0 auto;
+    font-size: 12px !important;
+    color: #a4edc4 !important;
+    min-height: 32px !important;
+    width: 100% !important;
+    font-weight: bold;
+}
+
+.telemetry-single-line {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+}
+
+/* Real-Time Line Shift Target Layout */
+.telemetry-odds {
+    font-size: 12px !important;
+    color: rgba(0, 38, 58, 1) !important;
+    width: 99% !important;
+    text-align: center !important;
+    min-height: 32px !important;
+    margin-bottom: 16px !important;
+    border-radius: 2px;
+    background-color: #ffffff !important;
+    padding: 8px 20px !important;
+}
+
+.telemetry-carousel-img-wrapper:hover .telemetry-odds {
+    background-color: rgba(128, 162, 184, 1) !important;
+}
+
+/* 9. VIEWPORT MEDIA QUERIES (MOBILE FLUIDITY MATRIX) */
+@media only screen and (max-width: 600px) {
+    .telemetry-carousel {
+        width: 100% !important;
+        min-width: fit-content;
+    }
+
+    .telemetry-odds {
+        font-size: small !important;
+    }
+
+    .telemetry-parlay-group {
+        gap: 0 !important;
+    }
+
+    .telemetry-parlays {
+        font-size: x-small !important;
+    }
+
+    #telemetry-carousel-one {
+        display: none !important; /* Contextual reduction of component bloat on mobile screens */
+    }
+
+    .telemetry-carousel::-webkit-scrollbar-track-piece:end {
+        margin-right: 100px;
+    }
+
+    .telemetry-carousel::-webkit-scrollbar-track-piece:start {
+        margin-left: 100px;
+    }
+}
+
+@media only screen and (min-width: 1700px) {
+    #telemetry-carousel-one {
+        justify-content: center;
+    }
+    
+    #telemetry-carousel-two {
+        justify-content: center;
+    }
+}

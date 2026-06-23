@@ -1,0 +1,537 @@
+<!-- ====================================================================
+    CONTEXTUAL LIQUID PERSONALIZATION LAYER & ROUTING CONFIGURATION
+    Scope: Server-side token validation and dynamic variable caching
+    Target Engine: CRM Campaign Delivery / Template Ingestion System
+    ==================================================================== -->
+
+{% assign single_one = "" %}
+{% assign single_two = "" %}
+{% assign single_three = "" %}
+{% assign single_four = "" %}
+{% assign single_five = "" %}
+{% assign parlay_one = "" %}
+{% assign parlay_two = "" %}
+{% assign parlay_three = "" %}
+{% assign parlay_four = "" %}
+{% assign parlay_five = "" %}
+
+<!-- Ingest epoch timestamp attributes out of incoming customer data objects -->
+{% assign nfl_timestamp = user.tags.nfl_telemetry_bet_timestamp %}
+{% assign nba_timestamp = user.tags.nba_telemetry_bet_timestamp %}
+{% assign mlb_timestamp = user.tags.mlb_telemetry_bet_timestamp %}
+{% assign ncaab_timestamp = user.tags.ncaab_telemetry_bet_timestamp %}
+
+<!-- Formulate runtime date math parameters to assess behavioral decay rates -->
+{% assign current_timestamp = 'now' | date: "%s" | times: 1000 %}
+{% assign nba_timestamp_seconds = nba_timestamp | divided_by: 1000 %}
+{% assign nfl_timestamp_seconds = nfl_timestamp | divided_by: 1000 %}
+{% assign mlb_timestamp_seconds = mlb_timestamp | divided_by: 1000 %}
+{% assign ncaab_timestamp_seconds = ncaab_timestamp | divided_by: 1000 %}
+{% assign current_timestamp_seconds = current_timestamp | divided_by: 1000 %}
+
+<!-- Target Constraint Profile: Identify if user actions occurred in the last 180 minutes -->
+{% assign within_last_180_minutes = 10800 %}
+{% assign nba_time_diff = current_timestamp_seconds | minus: nba_timestamp_seconds %}
+{% assign nfl_time_diff = current_timestamp_seconds | minus: nfl_timestamp_seconds %}
+{% assign mlb_time_diff = current_timestamp_seconds | minus: mlb_timestamp_seconds %}
+{% assign ncaab_time_diff = current_timestamp_seconds | minus: ncaab_timestamp_seconds %}
+
+<!-- ROUTING ZONE A: LEAGUE DATA HARVESTING CHECKPOINTS -->
+{% if nba_timestamp != blank and nba_time_diff <= within_last_180_minutes %}
+    {% assign nba_html_recommended_one = user.tags.nba_html_recommended_one %}
+    {% assign nba_html_recommended_two = user.tags.nba_html_recommended_two %}
+    {% assign nba_html_recommended_three = user.tags.nba_html_recommended_three %}
+    {% assign nba_html_recommended_four = user.tags.nba_html_recommended_four %}
+    {% assign nba_html_recommended_five = user.tags.nba_html_recommended_five %}
+    {% assign nba_html_parlay_one = user.tags.nba_html_parlay_one %}
+    {% assign nba_html_parlay_two = user.tags.nba_html_parlay_two %}
+    {% assign nba_html_parlay_three = user.tags.nba_html_parlay_three %}
+    {% assign nba_html_parlay_four = user.tags.nba_html_parlay_four %}
+    {% assign nba_html_parlay_five = user.tags.nba_html_parlay_five %}
+{% endif %}
+
+{% if nfl_timestamp != blank and nfl_time_diff <= within_last_180_minutes %}
+    {% assign nfl_html_recommended_one = user.tags.nfl_html_recommended_one %}
+    {% assign nfl_html_recommended_two = user.tags.nfl_html_recommended_two %}
+    {% assign nfl_html_recommended_three = user.tags.nfl_html_recommended_three %}
+    {% assign nfl_html_recommended_four = user.tags.nfl_html_recommended_four %}
+    {% assign nfl_html_recommended_five = user.tags.nfl_html_recommended_five %}
+    {% assign nfl_html_parlay_one = user.tags.nfl_html_parlay_one %}
+    {% assign nfl_html_parlay_two = user.tags.nfl_html_parlay_two %}
+    {% assign nfl_html_parlay_three = user.tags.nfl_html_parlay_three %}
+    {% assign nfl_html_parlay_four = user.tags.nfl_html_parlay_four %}
+    {% assign nfl_html_parlay_five = user.tags.nfl_html_parlay_five %}
+{% endif %}
+
+{% if mlb_timestamp != blank and mlb_time_diff <= within_last_180_minutes %}
+    {% assign mlb_html_recommended_one = user.tags.mlb_html_recommended_one %}
+    {% assign mlb_html_recommended_two = user.tags.mlb_html_recommended_two %}
+    {% assign mlb_html_recommended_three = user.tags.mlb_html_recommended_three %}
+    {% assign mlb_html_recommended_four = user.tags.mlb_html_recommended_four %}
+    {% assign mlb_html_recommended_five = user.tags.mlb_html_recommended_five %}
+    {% assign mlb_html_parlay_one = user.tags.mlb_html_parlay_one %}
+    {% assign mlb_html_parlay_two = user.tags.mlb_html_parlay_two %}
+    {% assign mlb_html_parlay_three = user.tags.mlb_html_parlay_three %}
+    {% assign mlb_html_parlay_four = user.tags.mlb_html_parlay_four %}
+    {% assign mlb_html_parlay_five = user.tags.mlb_html_parlay_five %}
+{% endif %}
+
+{% if ncaab_timestamp != blank and ncaab_time_diff <= within_last_180_minutes %}
+    {% assign ncaab_html_recommended_one = user.tags.ncaab_html_recommended_one %}
+    {% assign ncaab_html_recommended_two = user.tags.ncaab_html_recommended_two %}
+    {% assign ncaab_html_recommended_three = user.tags.ncaab_html_recommended_three %}
+    {% assign ncaab_html_recommended_four = user.tags.ncaab_html_recommended_four %}
+    {% assign ncaab_html_recommended_five = user.tags.ncaab_html_recommended_five %}
+    {% assign ncaab_html_parlay_one = user.tags.ncaab_html_parlay_one %}
+    {% assign ncaab_html_parlay_two = user.tags.ncaab_html_parlay_two %}
+    {% assign ncaab_html_parlay_three = user.tags.ncaab_html_parlay_three %}
+    {% assign ncaab_html_parlay_four = user.tags.ncaab_html_parlay_four %}
+    {% assign ncaab_html_parlay_five = user.tags.ncaab_html_parlay_five %}
+{% endif %}
+
+<!-- ROUTING ZONE B: DEDUPLICATION CASCADE ARCHITECTURE -->
+{% if nfl_html_recommended_one != blank %}
+    {% assign single_one = nfl_html_recommended_one %}
+{% SIGNED_ELSIF nba_html_recommended_one != blank %}
+    {% assign single_one = nba_html_recommended_one %}
+{% SIGNED_ELSIF mlb_html_recommended_one != blank %}
+    {% assign single_one = mlb_html_recommended_one %}
+{% SIGNED_ELSIF ncaab_html_recommended_one != blank %}
+    {% assign single_one = ncaab_html_recommended_one %}
+{% endif %}
+
+{% if nba_html_recommended_one != blank and nba_html_recommended_one != single_one %}
+    {% assign single_two = nba_html_recommended_one %}
+{% SIGNED_ELSIF mlb_html_recommended_one != blank and mlb_html_recommended_one != single_one %}
+    {% assign single_two = mlb_html_recommended_one %}
+{% SIGNED_ELSIF ncaab_html_recommended_one != blank and ncaab_html_recommended_one != single_one %}
+    {% assign single_two = ncaab_html_recommended_one %}
+{% SIGNED_ELSIF nba_html_recommended_two != blank %}
+    {% assign single_two = nba_html_recommended_two %}
+{% SIGNED_ELSIF ncaab_html_recommended_two != blank %}
+    {% assign single_two = ncaab_html_recommended_two %}
+{% SIGNED_ELSIF mlb_html_recommended_two != blank %}
+    {% assign single_two = mlb_html_recommended_two %}
+{% SIGNED_ELSIF nfl_html_recommended_two != blank %}
+    {% assign single_two = nfl_html_recommended_two %}
+{% endif %}
+
+{% if mlb_html_recommended_one != blank and mlb_html_recommended_one != single_one and mlb_html_recommended_one != single_two %}
+  {% assign single_three = mlb_html_recommended_one %}
+{% elsif ncaab_html_recommended_one != blank and ncaab_html_recommended_one != single_one and ncaab_html_recommended_one != single_two %}
+  {% assign single_three = ncaab_html_recommended_one %}
+{% elsif mlb_html_recommended_two != blank and mlb_html_recommended_two != single_two %}
+  {% assign single_three = mlb_html_recommended_two %}
+{% elsif ncaab_html_recommended_two != blank and ncaab_html_recommended_two != single_two %}
+  {% assign single_three = ncaab_html_recommended_two %}
+{% elsif nfl_html_recommended_two != blank and nfl_html_recommended_two != single_two %}
+  {% assign single_three = nfl_html_recommended_two %}
+{% elsif nba_html_recommended_two != blank and nba_html_recommended_two != single_two %}
+  {% assign single_three = nba_html_recommended_two %}
+{% elsif mlb_html_recommended_three != blank %}
+  {% assign single_three = mlb_html_recommended_three %}
+{% elsif ncaab_html_recommended_three != blank %}
+  {% assign single_three = ncaab_html_recommended_three %}
+{% elsif nfl_html_recommended_three != blank %}
+  {% assign single_three = nfl_html_recommended_three %}
+{% elsif nba_html_recommended_three != blank %}
+  {% assign single_three = nba_html_recommended_three %}
+{% endif %}
+
+{% if ncaab_html_recommended_one != blank and ncaab_html_recommended_one != single_one and ncaab_html_recommended_one != single_two and ncaab_html_recommended_one != single_three %}
+  {% assign single_four = ncaab_html_recommended_one %}
+{% elsif ncaab_html_recommended_two != blank and ncaab_html_recommended_two != single_two and ncaab_html_recommended_two != single_three %}
+  {% assign single_four = ncaab_html_recommended_two %}
+{% elsif nfl_html_recommended_two != blank and nfl_html_recommended_two != single_two and nfl_html_recommended_two != single_three %}
+  {% assign single_four = nfl_html_recommended_two %}
+{% elsif nba_html_recommended_two != blank and nba_html_recommended_two != single_two and nba_html_recommended_two != single_three %}
+  {% assign single_four = nba_html_recommended_two %}
+{% elsif mlb_html_recommended_two != blank and mlb_html_recommended_two != single_two and mlb_html_recommended_two != single_three %}
+  {% assign single_four = mlb_html_recommended_two %}
+{% elsif ncaab_html_recommended_three != blank and ncaab_html_recommended_three != single_three %}
+  {% assign single_four = ncaab_html_recommended_three %}
+{% elsif nfl_html_recommended_three != blank and nfl_html_recommended_three != single_three %}
+  {% assign single_four = nfl_html_recommended_three %}
+{% elsif nba_html_recommended_three != blank and nba_html_recommended_three != single_three %}
+  {% assign single_four = nba_html_recommended_three %}
+{% elsif mlb_html_recommended_three != blank and mlb_html_recommended_three != single_three %}
+  {% assign single_four = mlb_html_recommended_three %}
+{% elsif ncaab_html_recommended_four != blank %}
+  {% assign single_four = ncaab_html_recommended_four %}
+{% elsif nba_html_recommended_four != blank %}
+  {% assign single_four = nba_html_recommended_four %}
+{% elsif mlb_html_recommended_four != blank %}
+  {% assign single_four = mlb_html_recommended_four %}
+{% elsif nfl_html_recommended_four != blank %}
+  {% assign single_four = nfl_html_recommended_four %}
+{% endif %}
+
+{% if nfl_html_recommended_two != blank and nfl_html_recommended_two != single_two and nfl_html_recommended_two != single_three and nfl_html_recommended_two != single_four %}
+  {% assign single_five = nfl_html_recommended_two %}
+{% elsif nba_html_recommended_two != blank and nba_html_recommended_two != single_two and nba_html_recommended_two != single_three and nba_html_recommended_two != single_four %}
+  {% assign single_five = nba_html_recommended_two %}
+{% elsif mlb_html_recommended_two != blank and mlb_html_recommended_two != single_two and mlb_html_recommended_two != single_three and mlb_html_recommended_two != single_four %}
+  {% assign single_five = mlb_html_recommended_two %}
+{% elsif ncaab_html_recommended_two != blank and ncaab_html_recommended_two != single_two and ncaab_html_recommended_two != single_three and ncaab_html_recommended_two != single_four %}
+  {% assign single_five = ncaab_html_recommended_two %}
+{% elsif nfl_html_recommended_three != blank and nfl_html_recommended_three != single_three and nfl_html_recommended_three != single_four %}
+  {% assign single_five = nfl_html_recommended_three %}
+{% elsif nba_html_recommended_three != blank and nba_html_recommended_three != single_three and nba_html_recommended_three != single_four %}
+  {% assign single_five = nba_html_recommended_three %}
+{% elsif mlb_html_recommended_three != blank and mlb_html_recommended_three != single_three and mlb_html_recommended_three != single_four %}
+  {% assign single_five = mlb_html_recommended_three %}
+{% elsif ncaab_html_recommended_three != blank and ncaab_html_recommended_three != single_three and ncaab_html_recommended_three != single_four %}
+  {% assign single_five = ncaab_html_recommended_three %}
+{% elsif nba_html_recommended_four != blank and nba_html_recommended_four != single_four %}
+  {% assign single_five = nba_html_recommended_four %}
+{% elsif mlb_html_recommended_four != blank and mlb_html_recommended_four != single_four %}
+  {% assign single_five = mlb_html_recommended_four %}
+{% elsif nfl_html_recommended_four != blank and nfl_html_recommended_four != single_four %}
+  {% assign single_five = nfl_html_recommended_four %}
+{% elsif ncaab_html_recommended_four != blank and ncaab_html_recommended_four != single_four %}
+  {% assign single_five = ncaab_html_recommended_four %}
+{% elsif nfl_html_recommended_five != blank %}
+  {% assign single_five = nfl_html_recommended_five %}
+{% elsif nba_html_recommended_five != blank %}
+  {% assign single_five = nba_html_recommended_five %}
+{% elsif mlb_html_recommended_five != blank %}
+  {% assign single_five = mlb_html_recommended_five %}
+{% elsif ncaab_html_recommended_five != blank %}
+  {% assign single_five = ncaab_html_recommended_five %}
+{% endif %}
+
+{% if nfl_html_parlay_one != blank %}
+  {% assign parlay_one = nfl_html_parlay_one %}
+{% elsif nba_html_parlay_one != blank %}
+  {% assign parlay_one = nba_html_parlay_one %}
+{% elsif mlb_html_parlay_one != blank %}
+  {% assign parlay_one = mlb_html_parlay_one %}
+{% elsif ncaab_html_parlay_one != blank %}
+  {% assign parlay_one = ncaab_html_parlay_one %}
+{% endif %}
+
+{% if nba_html_parlay_one != blank and nba_html_parlay_one != parlay_one %}
+  {% assign parlay_two = nba_html_parlay_one %}
+{% elsif mlb_html_parlay_one != blank and mlb_html_parlay_one != parlay_one %}
+  {% assign parlay_two = mlb_html_parlay_one %}
+{% elsif ncaab_html_parlay_one != blank and ncaab_html_parlay_one != parlay_one %}
+  {% assign parlay_two = ncaab_html_parlay_one %}
+{% elsif nba_html_parlay_two != blank %}
+  {% assign parlay_two = nba_html_parlay_two %}
+{% elsif ncaab_html_parlay_two != blank %}
+  {% assign parlay_two = ncaab_html_parlay_two %}
+{% elsif mlb_html_parlay_two != blank %}
+  {% assign parlay_two = mlb_html_parlay_two %}
+{% elsif nfl_html_parlay_two != blank %}
+  {% assign parlay_two = nfl_html_parlay_two %}
+{% endif %}
+
+{% if mlb_html_parlay_one != blank and mlb_html_parlay_one != parlay_one and mlb_html_parlay_one != parlay_two %}
+  {% assign parlay_three = mlb_html_parlay_one %}
+{% elsif ncaab_html_parlay_one != blank and ncaab_html_parlay_one != parlay_one and ncaab_html_parlay_one != parlay_two %}
+  {% assign parlay_three = ncaab_html_parlay_one %}
+{% elsif mlb_html_parlay_two != blank and mlb_html_parlay_two != parlay_two %}
+  {% assign parlay_three = mlb_html_parlay_two %}
+{% elsif ncaab_html_parlay_two != blank and ncaab_html_parlay_two != parlay_two %}
+  {% assign parlay_three = ncaab_html_parlay_two %}
+{% elsif nfl_html_parlay_two != blank and nfl_html_parlay_two != parlay_two %}
+  {% assign parlay_three = nfl_html_parlay_two %}
+{% elsif nba_html_parlay_two != blank and nba_html_parlay_two != parlay_two %}
+  {% assign parlay_three = nba_html_parlay_two %}
+{% elsif mlb_html_parlay_three != blank %}
+  {% assign parlay_three = mlb_html_parlay_three %}
+{% elsif ncaab_html_parlay_three != blank %}
+  {% assign parlay_three = ncaab_html_parlay_three %}
+{% elsif nfl_html_parlay_three != blank %}
+  {% assign parlay_three = nfl_html_parlay_three %}
+{% elsif nba_html_parlay_three != blank %}
+  {% assign parlay_three = nba_html_parlay_three %}
+{% endif %}
+
+{% if ncaab_html_parlay_one != blank and ncaab_html_parlay_one != parlay_one and ncaab_html_parlay_one != parlay_two and ncaab_html_parlay_one != parlay_three %}
+  {% assign parlay_four = ncaab_html_parlay_one %}
+{% elsif ncaab_html_parlay_two != blank and ncaab_html_parlay_two != parlay_two and ncaab_html_parlay_two != parlay_three %}
+  {% assign parlay_four = ncaab_html_parlay_two %}
+{% elsif nfl_html_parlay_two != blank and nfl_html_parlay_two != parlay_two and nfl_html_parlay_two != parlay_three %}
+  {% assign parlay_four = nfl_html_parlay_two %}
+{% elsif nba_html_parlay_two != blank and nba_html_parlay_two != parlay_two and nba_html_parlay_two != parlay_three %}
+  {% assign parlay_four = nba_html_parlay_two %}
+{% elsif mlb_html_parlay_two != blank and mlb_html_parlay_two != parlay_two and mlb_html_parlay_two != parlay_three %}
+  {% assign parlay_four = mlb_html_parlay_two %}
+{% elsif ncaab_html_parlay_three != blank and ncaab_html_parlay_three != parlay_three %}
+  {% assign parlay_four = ncaab_html_parlay_three %}
+{% elsif nfl_html_parlay_three != blank and nfl_html_parlay_three != parlay_three %}
+  {% assign parlay_four = nfl_html_parlay_three %}
+{% elsif nba_html_parlay_three != blank and nba_html_parlay_three != parlay_three %}
+  {% assign parlay_four = nba_html_parlay_three %}
+{% elsif mlb_html_parlay_three != blank and mlb_html_parlay_three != parlay_three %}
+  {% assign parlay_four = mlb_html_parlay_three %}
+{% elsif ncaab_html_parlay_four != blank %}
+  {% assign parlay_four = ncaab_html_parlay_four %}
+{% elsif nba_html_parlay_four != blank %}
+  {% assign parlay_four = nba_html_parlay_four %}
+{% elsif mlb_html_parlay_four != blank %}
+  {% assign parlay_four = mlb_html_parlay_four %}
+{% elsif nfl_html_parlay_four != blank %}
+  {% assign parlay_four = nfl_html_parlay_four %}
+{% endif %}
+
+{% if nfl_html_parlay_two != blank and nfl_html_parlay_two != parlay_two and nfl_html_parlay_two != parlay_three and nfl_html_parlay_two != parlay_four %}
+  {% assign parlay_five = nfl_html_parlay_two %}
+{% elsif nba_html_parlay_two != blank and nba_html_parlay_two != parlay_two and nba_html_parlay_two != parlay_three and nba_html_parlay_two != parlay_four %}
+  {% assign parlay_five = nba_html_parlay_two %}
+{% elsif mlb_html_parlay_two != blank and mlb_html_parlay_two != parlay_two and mlb_html_parlay_two != parlay_three and mlb_html_parlay_two != parlay_four %}
+  {% assign parlay_five = mlb_html_parlay_two %}
+{% elsif ncaab_html_parlay_two != blank and ncaab_html_parlay_two != parlay_two and ncaab_html_parlay_two != parlay_three and ncaab_html_parlay_two != parlay_four %}
+  {% assign parlay_five = ncaab_html_parlay_two %}
+{% elsif nfl_html_parlay_three != blank and nfl_html_parlay_three != parlay_three and nfl_html_parlay_three != parlay_four %}
+  {% assign parlay_five = nfl_html_parlay_three %}
+{% elsif nba_html_parlay_three != blank and nba_html_parlay_three != parlay_three and nba_html_parlay_three != parlay_four %}
+  {% assign parlay_five = nba_html_parlay_three %}
+{% elsif mlb_html_parlay_three != blank and mlb_html_parlay_three != parlay_three and mlb_html_parlay_three != parlay_four %}
+  {% assign parlay_five = mlb_html_parlay_three %}
+{% elsif ncaab_html_parlay_three != blank and ncaab_html_parlay_three != parlay_three and ncaab_html_parlay_three != parlay_four %}
+  {% assign parlay_five = ncaab_html_parlay_three %}
+{% elsif nba_html_parlay_four != blank and nba_html_parlay_four != parlay_four %}
+  {% assign parlay_five = nba_html_parlay_four %}
+{% elsif mlb_html_parlay_four != blank and mlb_html_parlay_four != parlay_four %}
+  {% assign parlay_five = mlb_html_parlay_four %}
+{% elsif nfl_html_parlay_four != blank and nfl_html_parlay_four != parlay_four %}
+  {% assign parlay_five = nfl_html_parlay_four %}
+{% elsif ncaab_html_parlay_four != blank and ncaab_html_parlay_four != parlay_four %}
+  {% assign parlay_five = ncaab_html_parlay_four %}
+{% elsif nfl_html_parlay_five != blank %}
+  {% assign parlay_five = nfl_html_parlay_five %}
+{% elsif nba_html_parlay_five != blank %}
+  {% assign parlay_five = nba_html_parlay_five %}
+{% elsif mlb_html_parlay_five != blank %}
+  {% assign parlay_five = mlb_html_parlay_five %}
+{% elsif ncaab_html_parlay_five != blank %}
+  {% assign parlay_five = ncaab_html_parlay_five %}
+{% endif %}
+
+{% if single_one == blank %}
+  {% assign global_tag_one_nfl_trending = global.tags.nfl_html_trending_one %} {% assign global_tag_one_nba_trending = global.tags.nba_html_trending_one %} {% assign global_tag_one_mlb_trending = global.tags.mlb_html_trending_one %} {% assign global_tag_one_ncaab_trending = global.tags.ncaab_html_trending_one %}
+  {% if global_tag_one_nfl_trending != blank %}
+    {% assign single_one = global_tag_one_nfl_trending %}
+  {% elsif global_tag_one_nba_trending != blank %}
+    {% assign single_one = global_tag_one_nba_trending %}
+  {% elsif global_tag_one_mlb_trending != blank %}
+    {% assign single_one = global_tag_one_mlb_trending %}
+  {% elsif global_tag_one_ncaab_trending != blank %}
+    {% assign single_one = global_tag_one_ncaab_trending %}
+  {% endif %}
+{% endif %}
+
+{% if single_two == blank %}
+  {% assign global_tag_two_nfl_trending = global.tags.nfl_html_trending_two %} {% assign global_tag_two_nba_trending = global.tags.nba_html_trending_two %} {% assign global_tag_two_mlb_trending = global.tags.mlb_html_trending_two %} {% assign global_tag_two_ncaab_trending = global.tags.ncaab_html_trending_two %}
+  {% if global_tag_two_nba_trending != blank %}
+    {% assign single_two = global_tag_two_nba_trending %}
+  {% elsif global_tag_two_mlb_trending != blank %}
+    {% assign single_two = global_tag_two_mlb_trending %}
+  {% elsif global_tag_two_ncaab_trending != blank %}
+    {% assign single_two = global_tag_two_ncaab_trending %}
+  {% elsif global_tag_two_nfl_trending != blank %}
+    {% assign single_two = global_tag_two_nfl_trending %}
+  {% endif %}
+{% endif %}
+
+{% if single_three == blank %}
+  {% assign global_tag_three_nfl_trending = global.tags.nfl_html_trending_three %} {% assign global_tag_three_nba_trending = global.tags.nba_html_trending_three %} {% assign global_tag_three_mlb_trending = global.tags.mlb_html_trending_three %} {% assign global_tag_three_ncaab_trending = global.tags.ncaab_html_trending_three %}
+  {% if global_tag_three_mlb_trending != blank %}
+    {% assign single_three = global_tag_three_mlb_trending %}
+  {% elsif global_tag_three_ncaab_trending != blank %}
+    {% assign single_three = global_tag_three_ncaab_trending %}
+  {% elsif global_tag_three_nfl_trending != blank %}
+    {% assign single_three = global_tag_three_nfl_trending %}
+  {% elsif global_tag_three_nba_trending != blank %}
+    {% assign single_three = global_tag_three_nba_trending %}
+  {% endif %}
+{% endif %}
+
+{% if single_four == blank %}
+  {% assign global_tag_four_nfl_trending = global.tags.nfl_html_trending_four %} {% assign global_tag_four_nba_trending = global.tags.nba_html_trending_four %} {% assign global_tag_four_mlb_trending = global.tags.mlb_html_trending_four %} {% assign global_tag_four_ncaab_trending = global.tags.ncaab_html_trending_four %}
+  {% if global_tag_four_ncaab_trending != blank %}
+    {% assign single_four = global_tag_four_ncaab_trending %}
+  {% elsif global_tag_four_nfl_trending != blank %}
+    {% assign single_four = global_tag_four_nfl_trending %}
+  {% elsif global_tag_four_mlb_trending != blank %}
+    {% assign single_four = global_tag_four_mlb_trending %}
+  {% elsif global_tag_four_nba_trending != blank %}
+    {% assign single_four = global_tag_four_nba_trending %}
+  {% endif %}
+{% endif %}
+
+{% if single_five == blank %}
+  {% assign global_tag_five_nfl_trending = global.tags.nfl_html_trending_five %} {% assign global_tag_five_nba_trending = global.tags.nba_html_trending_five %} {% assign global_tag_five_mlb_trending = global.tags.mlb_html_trending_five %} {% assign global_tag_five_ncaab_trending = global.tags.ncaab_html_trending_five %}
+  {% if global_tag_five_nfl_trending != blank %}
+    {% assign single_five = global_tag_five_nfl_trending %}
+  {% elsif global_tag_five_nba_trending != blank %}
+    {% assign single_five = global_tag_five_nba_trending %}
+  {% elsif global_tag_five_mlb_trending != blank %}
+    {% assign single_five = global_tag_five_mlb_trending %}
+  {% elsif global_tag_five_ncaab_trending != blank %}
+    {% assign single_five = global_tag_five_ncaab_trending %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_one == blank %}
+  {% assign global_tag_one_nfl_parlay = global.tags.nfl_html_parlays_one %} {% assign global_tag_one_nba_parlay = global.tags.nba_html_parlays_one %} {% assign global_tag_one_mlb_parlay = global.tags.mlb_html_parlays_one %} {% assign global_tag_one_ncaab_parlay = global.tags.ncaab_html_parlays_one %}
+  {% if global_tag_one_nfl_parlay != blank %}
+    {% assign parlay_one = global_tag_one_nfl_parlay %}
+  {% elsif global_tag_one_nba_parlay != blank %}
+    {% assign parlay_one = global_tag_one_nba_parlay %}
+  {% elsif global_tag_one_mlb_parlay != blank %}
+    {% assign parlay_one = global_tag_one_mlb_parlay %}
+  {% elsif global_tag_one_ncaab_parlay != blank %}
+    {% assign parlay_one = global_tag_one_ncaab_parlay %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_two == blank %}
+  {% assign global_tag_two_nfl_parlay = global.tags.nfl_html_parlays_two %} {% assign global_tag_two_nba_parlay = global.tags.nba_html_parlays_two %} {% assign global_tag_two_mlb_parlay = global.tags.mlb_html_parlays_two %} {% assign global_tag_two_ncaab_parlay = global.tags.ncaab_html_parlays_two %}
+  {% if global_tag_two_nba_parlay != blank %}
+    {% assign parlay_two = global_tag_two_nba_parlay %}
+  {% elsif global_tag_two_mlb_parlay != blank %}
+    {% assign parlay_two = global_tag_two_mlb_parlay %}
+  {% elsif global_tag_two_ncaab_parlay != blank %}
+    {% assign parlay_two = global_tag_two_ncaab_parlay %}
+  {% elsif global_tag_two_nfl_parlay != blank %}
+    {% assign parlay_two = global_tag_two_nfl_parlay %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_three == blank %}
+  {% assign global_tag_three_nfl_parlay = global.tags.nfl_html_parlays_three %} {% assign global_tag_three_nba_parlay = global.tags.nba_html_parlays_three %} {% assign global_tag_three_mlb_parlay = global.tags.mlb_html_parlays_three %} {% assign global_tag_three_ncaab_parlay = global.tags.ncaab_html_parlays_three %}
+  {% if global_tag_three_mlb_parlay != blank %}
+    {% assign parlay_three = global_tag_three_mlb_parlay %}
+  {% elsif global_tag_three_ncaab_parlay != blank %}
+    {% assign parlay_three = global_tag_three_ncaab_parlay %}
+  {% elsif global_tag_three_nfl_parlay != blank %}
+    {% assign parlay_three = global_tag_three_nfl_parlay %}
+  {% elsif global_tag_three_nba_parlay != blank %}
+    {% assign parlay_three = global_tag_three_nba_parlay %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_four == blank %}
+  {% assign global_tag_four_nfl_parlay = global.tags.nfl_html_parlays_four %} {% assign global_tag_four_nba_parlay = global.tags.nba_html_parlays_four %} {% assign global_tag_four_mlb_parlay = global.tags.mlb_html_parlays_four %} {% assign global_tag_four_ncaab_parlay = global.tags.ncaab_html_parlays_four %}
+  {% if global_tag_four_ncaab_parlay != blank %}
+    {% assign parlay_four = global_tag_four_ncaab_parlay %}
+  {% elsif global_tag_four_nfl_parlay != blank %}
+    {% assign parlay_four = global_tag_four_nfl_parlay %}
+  {% elsif global_tag_four_mlb_parlay != blank %}
+    {% assign parlay_four = global_tag_four_mlb_parlay %}
+  {% elsif global_tag_four_nba_parlay != blank %}
+    {% assign parlay_four = global_tag_four_nba_parlay %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_five == blank %}
+  {% assign global_tag_five_nfl_parlay = global.tags.nfl_html_parlays_five %} {% assign global_tag_five_nba_parlay = global.tags.nba_html_parlays_five %} {% assign global_tag_five_mlb_parlay = global.tags.mlb_html_parlays_five %} {% assign global_tag_five_ncaab_parlay = global.tags.ncaab_html_parlays_five %}
+  {% if global_tag_five_nfl_parlay != blank %}
+    {% assign parlay_five = global_tag_five_nfl_parlay %}
+  {% elsif global_tag_five_nba_parlay != blank %}
+    {% assign parlay_five = global_tag_five_nba_parlay %}
+  {% elsif global_tag_five_mlb_parlay != blank %}
+    {% assign parlay_five = global_tag_five_mlb_parlay %}
+  {% elsif global_tag_five_ncaab_parlay != blank %}
+    {% assign parlay_five = global_tag_five_ncaab_parlay %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_one == blank %}
+  {% assign global_tag_one_nfl_parlay = global.tags.nfl_html_parlays_one %} {% assign global_tag_one_nba_parlay = global.tags.nba_html_parlays_one %} {% assign global_tag_one_mlb_parlay = global.tags.mlb_html_parlays_one %} {% assign global_tag_one_ncaab_parlay = global.tags.ncaab_html_parlays_one %}
+  {% if global_tag_one_nfl_parlay != blank %}
+    {% assign parlay_one = global_tag_one_nfl_parlay %}
+  {% elsif global_tag_one_nba_parlay != blank %}
+    {% assign parlay_one = global_tag_one_nba_parlay %}
+  {% elsif global_tag_one_mlb_parlay != blank %}
+    {% assign parlay_one = global_tag_one_mlb_parlay %}
+  {% elsif global_tag_one_ncaab_parlay != blank %}
+    {% assign parlay_one = global_tag_one_ncaab_parlay %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_two == blank %}
+  {% assign global_tag_two_nfl_parlay = global.tags.nfl_html_parlays_two %} {% assign global_tag_two_nba_parlay = global.tags.nba_html_parlays_two %} {% assign global_tag_two_mlb_parlay = global.tags.mlb_html_parlays_two %} {% assign global_tag_two_ncaab_parlay = global.tags.ncaab_html_parlays_two %}
+  {% if global_tag_two_nba_parlay != blank %}
+    {% assign parlay_two = global_tag_two_nba_parlay %}
+  {% elsif global_tag_two_mlb_parlay != blank %}
+    {% assign parlay_two = global_tag_two_mlb_parlay %}
+  {% elsif global_tag_two_ncaab_parlay != blank %}
+    {% assign parlay_two = global_tag_two_ncaab_parlay %}
+  {% elsif global_tag_two_nfl_parlay != blank %}
+    {% assign parlay_two = global_tag_two_nfl_parlay %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_three == blank %}
+  {% assign global_tag_three_nfl_parlay = global.tags.nfl_html_parlays_three %} {% assign global_tag_three_nba_parlay = global.tags.nba_html_parlays_three %} {% assign global_tag_three_mlb_parlay = global.tags.mlb_html_parlays_three %} {% assign global_tag_three_ncaab_parlay = global.tags.ncaab_html_parlays_three %}
+  {% if global_tag_three_mlb_parlay != blank %}
+    {% assign parlay_three = global_tag_three_mlb_parlay %}
+  {% elsif global_tag_three_ncaab_parlay != blank %}
+    {% assign parlay_three = global_tag_three_ncaab_parlay %}
+  {% elsif global_tag_three_nfl_parlay != blank %}
+    {% assign parlay_three = global_tag_three_nfl_parlay %}
+  {% elsif global_tag_three_nba_parlay != blank %}
+    {% assign parlay_three = global_tag_three_nba_parlay %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_four == blank %}
+  {% assign global_tag_four_nfl_parlay = global.tags.nfl_html_parlays_four %} {% assign global_tag_four_nba_parlay = global.tags.nba_html_parlays_four %} {% assign global_tag_four_mlb_parlay = global.tags.mlb_html_parlays_four %} {% assign global_tag_four_ncaab_parlay = global.tags.ncaab_html_parlays_four %}
+  {% if global_tag_four_ncaab_parlay != blank %}
+    {% assign parlay_four = global_tag_four_ncaab_parlay %}
+  {% elsif global_tag_four_nfl_parlay != blank %}
+    {% assign parlay_four = global_tag_four_nfl_parlay %}
+  {% elsif global_tag_four_mlb_parlay != blank %}
+    {% assign parlay_four = global_tag_four_mlb_parlay %}
+  {% elsif global_tag_four_nba_parlay != blank %}
+    {% assign parlay_four = global_tag_four_nba_parlay %}
+  {% endif %}
+{% endif %}
+
+{% if parlay_five == blank %}
+  {% assign global_tag_five_nfl_parlay = global.tags.nfl_html_parlays_five %} {% assign global_tag_five_nba_parlay = global.tags.nba_html_parlays_five %} {% assign global_tag_five_mlb_parlay = global.tags.mlb_html_parlays_five %} {% assign global_tag_five_ncaab_parlay = global.tags.ncaab_html_parlays_five %}
+  {% if global_tag_five_nfl_parlay != blank %}
+    {% assign parlay_five = global_tag_five_nfl_parlay %}
+  {% elsif global_tag_five_nba_parlay != blank %}
+    {% assign parlay_five = global_tag_five_nba_parlay %}
+  {% elsif global_tag_five_mlb_parlay != blank %}
+    {% assign parlay_five = global_tag_five_mlb_parlay %}
+  {% elsif global_tag_five_ncaab_parlay != blank %}
+    {% assign parlay_five = global_tag_five_ncaab_parlay %}
+  {% endif %}
+{% endif %}
+
+<!-- ====================================================================
+    3. ASSEMBLED DOM VISUAL LAYER CAROUSEL LAYOUTS
+    ==================================================================== -->
+
+<!-- Layout Header Segment -->
+<div id="telemetry-heading">Quick Bets</div>
+
+<!-- Slider Shell 1: Standard Betting Line Modules -->
+<div class="telemetry-carousel" id="telemetry-carousel-one">
+    <div class="telemetry-carousel-game-container">
+        {% comment %}{{ single_one | fail_if_absent }} {% endcomment %}
+        {{ global.tags.mlb_html_trending_one_test }}
+        {{ global.tags.mlb_html_trending_five_test }}
+        {{ global.tags.nba_html_trending_two_test }}
+        {{ global.tags.mlb_html_trending_one_test }}
+        {{ global.tags.nba_html_trending_four_test }}
+    </div>
+</div>
+
+<!-- Slider Shell 2: Complex Multi-Leg Parlay Recommendations -->
+<div class="telemetry-carousel" id="telemetry-carousel-two">
+    <div class="telemetry-carousel-game-container">
+        {% comment %}{{ parlay_one | fail_if_absent }}{% endcomment %}
+        {{ global.tags.nba_html_parlays_four_test }}
+        {{ global.tags.test_interstitial_parlay_1 }}
+        {{ global.tags.nba_html_parlays_one_test }}
+        {{ global.tags.mlb_html_parlays_one_test }}
+        {{ global.tags.mlb_html_parlays_three_test }}
+    </div>
+</div>
