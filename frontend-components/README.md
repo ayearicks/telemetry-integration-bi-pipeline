@@ -1,4 +1,4 @@
-# 🎨 Frontend Components Layer
+# Frontend Components Layer
 
 This directory holds frontend architecture samples built using Liquid templating syntax, pure CSS variables, and fluid media matrices. They model how server-side variables mutate layout footprints to construct contextually targeted content delivery streams.
 

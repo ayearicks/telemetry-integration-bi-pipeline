@@ -1,4 +1,4 @@
-# 🏷️ Google Tag Manager (GTM) Integrations Layer
+# Google Tag Manager (GTM) Integrations Layer
 
 This directory demonstrates client-side telemetry ingestion, tag deployment frameworks, and real-time asynchronous API integration workflows executed directly within Google Tag Manager containers.
 
